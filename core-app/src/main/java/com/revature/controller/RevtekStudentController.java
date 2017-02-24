@@ -37,8 +37,9 @@ public class RevtekStudentController {
 		}
 		return students;
 	}
+
 	@RequestMapping("/studentcount")
-	public int getStudentCount(){
+	public int getStudentCount() {
 		int studentCount;
 		try {
 			logger.info("Getting the students data...");
@@ -52,6 +53,24 @@ public class RevtekStudentController {
 			throw new InternalException("System has some issue...", e);
 		}
 		return studentCount;
-		
+
 	}
+
+	@RequestMapping("/studentsRegForTheDay")
+	public List<RevtekStudent> getStudentsListByDateOfEnrollController() {
+		List<RevtekStudent> students = null;
+		try {
+			logger.info("Getting the students data...");
+			students = studentService.getStudentsListByDateOfEnroll();
+			logger.info("Students data retrieval success.");
+		} catch (BusinessServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new InvalidInputException(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new InternalException("System has some issue...", e);
+		}
+		return students;
+	}
+
 }

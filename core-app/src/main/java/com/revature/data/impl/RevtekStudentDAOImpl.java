@@ -29,7 +29,8 @@ public class RevtekStudentDAOImpl implements RevtekStudentDAO {
 	public List<RevtekStudent> getAllRevtekStudents() throws DataServiceException {
 		List<RevtekStudent> students = null;
 		try {
-			StringBuilder sb = new StringBuilder("SELECT st.NAME AS stu_name,un.NAME as university_name,st.REGISTERED_ON FROM revtek_students AS st JOIN seed_universities AS un ON (un.ID = st.UNIVERSITY_ID)");
+			StringBuilder sb = new StringBuilder(
+					"SELECT st.NAME AS stu_name,un.NAME as university_name,st.REGISTERED_ON FROM revtek_students AS st JOIN seed_universities AS un ON (un.ID = st.UNIVERSITY_ID)");
 			students = dataRetriver.retrieveBySQL(sb.toString());
 			logger.info("Students data retrieval success..");
 		} catch (DataAccessException e) {
@@ -38,9 +39,9 @@ public class RevtekStudentDAOImpl implements RevtekStudentDAO {
 		}
 		return students;
 	}
-	public int getCountOfStudents() throws DataServiceException
-	{
-	int studentCount;
+
+	public int getCountOfStudents() throws DataServiceException {
+		int studentCount;
 		try {
 			StringBuilder sb = new StringBuilder("SELECT COUNT(id) FROM revtek_students");
 			studentCount = dataRetriver.retrieveBySQLInt(sb.toString());
@@ -49,7 +50,22 @@ public class RevtekStudentDAOImpl implements RevtekStudentDAO {
 			logger.error(e.getMessage(), e);
 			throw new DataServiceException(DataUtils.getPropertyMessage("data_retrieval_fail"), e);
 		}
-		return studentCount;	
+		return studentCount;
+	}
+
+	public List<RevtekStudent> getStudentsListByDateOfEnroll() throws DataServiceException {
+
+		List<RevtekStudent> students = null;
+		try {
+			StringBuilder sb = new StringBuilder(
+					"SELECT revtek_students.`NAME` AS student_name,seed_universities.`NAME` as university_name FROM revtek_students JOIN seed_universities ON seed_universities.`ID` = revtek_students.`UNIVERSITY_ID` WHERE revtek_students.REGISTERED_ON=CURRENT_DATE();");
+			students = dataRetriver.retrieveBySQL(sb.toString());
+			logger.info("Students data retrieval success..");
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage(), e);
+			throw new DataServiceException(DataUtils.getPropertyMessage("data_retrieval_fail"), e);
+		}
+		return students;
 	}
 
 }

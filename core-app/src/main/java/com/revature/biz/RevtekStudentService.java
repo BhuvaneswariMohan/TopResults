@@ -8,4 +8,5 @@ import com.revature.model.RevtekStudent;
 public interface RevtekStudentService {
 	List<RevtekStudent> getAllRevtekStudents() throws BusinessServiceException;
 	public int getCountOfStudents() throws BusinessServiceException;
+	List<RevtekStudent> getStudentsListByDateOfEnroll() throws BusinessServiceException;
 }
