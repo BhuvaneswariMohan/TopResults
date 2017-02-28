@@ -1,5 +1,6 @@
 package com.revature.data.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -14,7 +15,7 @@ import com.revature.model.Project;
 
 @Repository
 public class ProjectDAOImpl implements ProjectDAO {
-	private static Logger logger = Logger.getLogger(CourseDAOImpl.class);
+	private static Logger logger = Logger.getLogger(ProjectDAOImpl.class);
 	@Autowired
 	private DataRetriver dataRetriver;
 
@@ -42,4 +43,47 @@ public class ProjectDAOImpl implements ProjectDAO {
 		return projects;
 	}
 
+	public List<Project> getProjectTitle() throws DataServiceException {
+		List<Project> projects = null;
+		try {
+			StringBuilder sb = new StringBuilder("SELECT TITLE,DESCRIPTION FROM projects");
+			projects = dataRetriver.retrieveBySQL(sb.toString());
+			logger.info("Success");
+
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage(), e);
+			throw new DataServiceException(DataUtils.getPropertyMessage("Failed"));
+
+		}
+		return projects;
+	}
+
+	public BigInteger getProjectEnrolledCount(Integer projectId) throws DataServiceException {
+		BigInteger studentCount;
+		try {
+			StringBuilder sb = new StringBuilder(
+					"SELECT COUNT(id) FROM student_projects WHERE PROJECT_ID= " + projectId);
+			studentCount = (BigInteger) dataRetriver.retrieveBySQLInt(sb.toString());
+			logger.info("students enrolled projects data retrieval success..");
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage(), e);
+			throw new DataServiceException(DataUtils.getPropertyMessage("data_retrieval_fail"), e);
+		}
+		return studentCount;
+	}
+
+	public List<Project> getProjectdetailsbyname(String project) throws DataServiceException {
+		List<Project> projects = null;
+		try {
+			StringBuilder sb = new StringBuilder(
+					"SELECT projects.`TITLE`,projects.`DESCRIPTION`,mentors.`NAME`,mentors.`EMAIL_ID`,projects.`ENROLLMENT_POINTS`,projects.`COMPLETION_POINTS` FROM projects JOIN mentors ON mentors.`ID` = projects.`MENTOR_ID` WHERE projects.`TITLE`="
+							+ project);
+			projects = dataRetriver.retrieveBySQL(sb.toString());
+			logger.info("Projects data retrieval success.." + projects);
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage(), e);
+			throw new DataServiceException(DataUtils.getPropertyMessage("data_retrieval_fail"), e);
+		}
+		return projects;
+	}
 }

@@ -1,5 +1,6 @@
 package com.revature.data.access;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import com.revature.data.access.exception.DataAccessException;
@@ -13,7 +14,7 @@ public interface DataRetriver {
    * @throws DataAccessException if query format error
    */
   public <E> List<E> retrieveBySQL(String query) throws DataAccessException;
-  public <E> Integer retrieveBySQLInt(String query) throws DataAccessException;
+  public <E> BigInteger retrieveBySQLInt(String query) throws DataAccessException;
 Long retrieveBySQLLong(String query) throws DataAccessException;
 
 }

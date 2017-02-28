@@ -1,7 +1,7 @@
 package com.revature.data.access.impl;
 
+import java.math.BigInteger;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,54 +14,47 @@ import com.revature.data.access.exception.DataAccessException;
 @SuppressWarnings("unchecked")
 public class DataRetriverImpl implements DataRetriver {
 
-  private static Logger logger = Logger.getLogger(DataRetriverImpl.class);
+	private static Logger logger = Logger.getLogger(DataRetriverImpl.class);
 
-  @Autowired
-  private SessionFactory sessionFactory;
+	@Autowired
+	private SessionFactory sessionFactory;
 
+	public <E> List<E> retrieveBySQL(String queryString) throws DataAccessException {
+		List<E> list = null;
+		try {
+			list = sessionFactory.getCurrentSession().createSQLQuery(queryString).list();
+			logger.info("data retrieval success..");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new DataAccessException(e.getMessage(), e);
+		}
+		return list;
+	}
 
-  public <E> List<E> retrieveBySQL(String queryString) throws DataAccessException {
-    List<E> list = null;
-    try {
-      list = sessionFactory.getCurrentSession().createSQLQuery(queryString).list();
-      logger.info("data retrieval success..");
-    } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-      throw new DataAccessException(e.getMessage(), e);
-    }
-    return list;
-  }
+	@Override
+	public <E> BigInteger retrieveBySQLInt(String query) throws DataAccessException {
+		BigInteger studentCount;
+		try {
+			studentCount =  (BigInteger) sessionFactory.getCurrentSession().createSQLQuery(query).uniqueResult();
+			logger.info("data retrieval success..");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new DataAccessException(e.getMessage(), e);
+		}
+		return studentCount;
+	}
 
-
-@Override
-public <E> Integer retrieveBySQLInt(String query) throws DataAccessException {
-	int studentCount;
-	try {
-	      studentCount =(Integer) sessionFactory.getCurrentSession().createSQLQuery(query).uniqueResult();
-	      logger.info("data retrieval success..");
-	    } catch (Exception e) {
-	      logger.error(e.getMessage(), e);
-	      throw new DataAccessException(e.getMessage(), e);
-	    }
-	    return studentCount;
-}
-
-@Override
-public Long retrieveBySQLLong(String query) throws DataAccessException {
-	Long studentCount;
-	try {
-	      studentCount =(Long) sessionFactory.getCurrentSession().createSQLQuery(query).uniqueResult();
-	      logger.info("data retrieval success..");
-	    } catch (Exception e) {
-	      logger.error(e.getMessage(), e);
-	      throw new DataAccessException(e.getMessage(), e);
-	    }
-	    return studentCount;
-}
-
-
-
-
-
+	@Override
+	public Long retrieveBySQLLong(String query) throws DataAccessException {
+		Long studentCount;
+		try {
+			studentCount = (Long) sessionFactory.getCurrentSession().createSQLQuery(query).uniqueResult();
+			logger.info("data retrieval success..");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new DataAccessException(e.getMessage(), e);
+		}
+		return studentCount;
+	}
 
 }

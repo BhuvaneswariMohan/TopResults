@@ -1,5 +1,6 @@
 package com.revature.controller;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -39,8 +40,8 @@ public class RevtekStudentController {
 	}
 
 	@RequestMapping("/studentcount")
-	public int getStudentCount() {
-		int studentCount;
+	public BigInteger getStudentCount() {
+		BigInteger studentCount;
 		try {
 			logger.info("Getting the students data...");
 			studentCount = studentService.getCountOfStudents();
@@ -71,6 +72,24 @@ public class RevtekStudentController {
 			throw new InternalException("System has some issue...", e);
 		}
 		return students;
+	}
+
+	@RequestMapping("/studentcountfortheday")
+	public BigInteger getStudentsCountEnrolledForTheDay() {
+		BigInteger studentCount;
+		try {
+			logger.info("Getting the students data...");
+			studentCount = studentService.getStudentsCountEnrolledForTheDay();
+			logger.info("Students count data retrieval success.");
+		} catch (BusinessServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new InvalidInputException(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new InternalException("System has some issue...", e);
+		}
+		return studentCount;
+
 	}
 
 }

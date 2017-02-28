@@ -1,5 +1,6 @@
 package com.revature.biz.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,43 @@ public class CourseServiceImpl implements CourseService {
 			logger.error(e.getMessage(), e);
 			throw new BusinessServiceException(e.getMessage(), e);
 
+		}
+		return courses;
+	}
+
+	public List<Course> getCourseTitles() throws BusinessServiceException {
+		List<Course> courses;
+		try {
+			courses = courseDAO.getCourseTitles();
+			logger.info("Course titles retrieved successfully");
+		} catch (DataServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new BusinessServiceException(e.getMessage(), e);
+
+		}
+		return courses;
+	}
+
+	public BigInteger getCourseEnrolledCount(Integer courseId) throws BusinessServiceException {
+		BigInteger studentCount;
+		try {
+			studentCount = courseDAO.getCourseEnrolledCount(courseId);
+			logger.info("Courses count retrieved successfully");
+		} catch (DataServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new BusinessServiceException(e.getMessage(), e);
+		}
+		return studentCount;
+	}
+
+	public List<Course> getDetails(String course) throws BusinessServiceException {
+		List<Course> courses = null;
+		try {
+			courses = courseDAO.getCoursedetailsbyname(course);
+			logger.info("courses retrieved successfully");
+		} catch (DataServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new BusinessServiceException(e.getMessage(), e);
 		}
 		return courses;
 	}

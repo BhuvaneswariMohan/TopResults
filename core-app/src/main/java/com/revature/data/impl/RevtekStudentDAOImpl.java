@@ -1,5 +1,6 @@
 package com.revature.data.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +41,12 @@ public class RevtekStudentDAOImpl implements RevtekStudentDAO {
 		return students;
 	}
 
-	public int getCountOfStudents() throws DataServiceException {
-		int studentCount;
+	public BigInteger getCountOfStudents() throws DataServiceException {
+		BigInteger studentCount;
 		try {
 			StringBuilder sb = new StringBuilder("SELECT COUNT(id) FROM revtek_students");
-			studentCount = dataRetriver.retrieveBySQLInt(sb.toString());
-			logger.info("Students one data retrieval success..");
+			studentCount = (BigInteger) dataRetriver.retrieveBySQLInt(sb.toString());
+			logger.info("Students data retrieval success..");
 		} catch (DataAccessException e) {
 			logger.error(e.getMessage(), e);
 			throw new DataServiceException(DataUtils.getPropertyMessage("data_retrieval_fail"), e);
@@ -67,5 +68,18 @@ public class RevtekStudentDAOImpl implements RevtekStudentDAO {
 		}
 		return students;
 	}
+	public BigInteger getStudentsCountEnrolledForTheDay() throws DataServiceException {
+		BigInteger studentCount;
+		try {
+			StringBuilder sb = new StringBuilder("SELECT COUNT(id) FROM revtek_students WHERE REGISTERED_ON=CURDATE() ");
+			studentCount = (BigInteger) dataRetriver.retrieveBySQLInt(sb.toString());
+			logger.info("Students data retrieval success..");
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage(), e);
+			throw new DataServiceException(DataUtils.getPropertyMessage("data_retrieval_fail"), e);
+		}
+		return studentCount;
+	}
+	
 
 }
